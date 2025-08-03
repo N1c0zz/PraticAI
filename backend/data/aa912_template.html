@@ -1,0 +1,255 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Modulo AA9/12 - Dichiarazione di inizio attività</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            font-size: 12px;
+            line-height: 1.4;
+            margin: 20px;
+            color: #000;
+        }
+        .header {
+            text-align: center;
+            margin-bottom: 30px;
+            border-bottom: 2px solid #000;
+            padding-bottom: 10px;
+        }
+        .logo {
+            font-weight: bold;
+            font-size: 16px;
+        }
+        .form-title {
+            font-size: 14px;
+            font-weight: bold;
+            margin: 10px 0;
+        }
+        .section {
+            margin-bottom: 25px;
+            border: 1px solid #ccc;
+            padding: 15px;
+        }
+        .section-title {
+            font-weight: bold;
+            font-size: 13px;
+            margin-bottom: 10px;
+            background-color: #f0f0f0;
+            padding: 5px;
+            border-left: 4px solid #007acc;
+        }
+        .row {
+            display: flex;
+            margin-bottom: 8px;
+            align-items: center;
+        }
+        .field {
+            display: inline-block;
+            margin-right: 20px;
+        }
+        .field-label {
+            font-weight: bold;
+            margin-right: 5px;
+        }
+        .field-value {
+            border-bottom: 1px solid #000;
+            min-width: 150px;
+            padding: 2px 5px;
+            display: inline-block;
+        }
+        .checkbox {
+            margin-right: 5px;
+        }
+        .full-width {
+            width: 100%;
+        }
+        .signature-section {
+            margin-top: 40px;
+            display: flex;
+            justify-content: space-between;
+        }
+        .signature-box {
+            border: 1px solid #000;
+            width: 200px;
+            height: 80px;
+            text-align: center;
+            padding-top: 60px;
+        }
+        @media print {
+            body { margin: 10px; }
+            .page-break { page-break-before: always; }
+        }
+    </style>
+</head>
+<body>
+    <!-- Header -->
+    <div class="header">
+        <div class="logo">AGENZIA DELLE ENTRATE</div>
+        <div class="form-title">
+            DICHIARAZIONE DI INIZIO ATTIVITÀ, DI VARIAZIONE DATI O DI CESSAZIONE<br>
+            AI FINI DELL'IMPOSTA SUL VALORE AGGIUNTO<br>
+            (Art. 35 D.P.R. 26 ottobre 1972, n. 633)
+        </div>
+        <div style="font-size: 11px; margin-top: 10px;">
+            Modello AA9/12 - Compilato automaticamente da PraticAI il {{ data_compilazione }}
+        </div>
+    </div>
+
+    <!-- Sezione 1: Dati identificativi -->
+    <div class="section">
+        <div class="section-title">SEZIONE I - DATI IDENTIFICATIVI DEL SOGGETTO</div>
+        
+        <div class="row">
+            <div class="field">
+                <span class="field-label">Cognome:</span>
+                <span class="field-value">{{ cognome }}</span>
+            </div>
+            <div class="field">
+                <span class="field-label">Nome:</span>
+                <span class="field-value">{{ nome }}</span>
+            </div>
+        </div>
+        
+        <div class="row">
+            <div class="field">
+                <span class="field-label">Codice Fiscale:</span>
+                <span class="field-value">{{ codiceFiscale }}</span>
+            </div>
+        </div>
+        
+        <div class="row">
+            <div class="field full-width">
+                <span class="field-label">Indirizzo residenza:</span>
+                <span class="field-value">{{ indirizzo }}, {{ civico }} - {{ cap }} {{ comune }} ({{ provincia }})</span>
+            </div>
+        </div>
+        
+        <div class="row">
+            <div class="field">
+                <span class="field-label">Email:</span>
+                <span class="field-value">{{ email }}</span>
+            </div>
+            <div class="field">
+                <span class="field-label">Telefono:</span>
+                <span class="field-value">{{ telefono }}</span>
+            </div>
+        </div>
+    </div>
+
+    <!-- Sezione 2: Tipo di dichiarazione -->
+    <div class="section">
+        <div class="section-title">SEZIONE II - TIPO DI DICHIARAZIONE</div>
+        
+        <div class="row">
+            <label>
+                <input type="checkbox" class="checkbox" checked> INIZIO ATTIVITÀ
+            </label>
+        </div>
+        
+        <div class="row">
+            <div class="field">
+                <span class="field-label">Data inizio attività:</span>
+                <span class="field-value">{{ data_inizio_formatted }}</span>
+            </div>
+        </div>
+    </div>
+
+    <!-- Sezione 3: Attività esercitata -->
+    <div class="section">
+        <div class="section-title">SEZIONE III - ATTIVITÀ ESERCITATA</div>
+        
+        <div class="row">
+            <div class="field">
+                <span class="field-label">Codice attività (ATECO):</span>
+                <span class="field-value">{{ codiceAteco }}</span>
+            </div>
+        </div>
+        
+        <div class="row">
+            <div class="field full-width">
+                <span class="field-label">Descrizione attività:</span>
+            </div>
+        </div>
+        <div class="row">
+            <div class="field-value full-width" style="min-height: 40px; padding: 10px; border: 1px solid #000;">
+                {{ descrizioneAttivita }}
+            </div>
+        </div>
+        
+        <div class="row" style="margin-top: 15px;">
+            <div class="field">
+                <span class="field-label">Luogo di esercizio dell'attività:</span>
+            </div>
+        </div>
+        <div class="row">
+            <span class="field-value full-width">{{ indirizzo }}, {{ civico }} - {{ cap }} {{ comune }} ({{ provincia }})</span>
+        </div>
+    </div>
+
+    <!-- Sezione 4: Regime fiscale -->
+    <div class="section">
+        <div class="section-title">SEZIONE IV - REGIME FISCALE</div>
+        
+        <div class="row">
+            <label>
+                <input type="checkbox" class="checkbox" {{ regime_forfettario_checked }}> 
+                Regime forfettario (art. 1, commi 54-89, legge 190/2014)
+            </label>
+        </div>
+        
+        <div class="row">
+            <label>
+                <input type="checkbox" class="checkbox" {{ regime_ordinario_checked }}> 
+                Regime ordinario
+            </label>
+        </div>
+    </div>
+
+    <!-- Sezione 5: Dichiarazioni e impegni -->
+    <div class="section">
+        <div class="section-title">SEZIONE V - DICHIARAZIONI E IMPEGNI</div>
+        
+        <div style="font-size: 11px; line-height: 1.6;">
+            <p>Il sottoscritto dichiara di:</p>
+            <ul style="margin-left: 20px;">
+                <li>essere consapevole delle responsabilità penali previste dall'art. 76 del D.P.R. 445/2000 per le dichiarazioni mendaci;</li>
+                <li>aver preso visione dell'informativa sul trattamento dei dati personali;</li>
+                <li>impegnarsi a comunicare tempestivamente ogni variazione dei dati dichiarati;</li>
+                <li>rispettare tutti gli obblighi derivanti dall'esercizio dell'attività dichiarata.</li>
+            </ul>
+        </div>
+    </div>
+
+    <!-- Sezione firma -->
+    <div class="signature-section">
+        <div>
+            <div style="margin-bottom: 10px;">
+                <strong>Data: {{ data_compilazione }}</strong>
+            </div>
+            <div style="margin-bottom: 10px;">
+                <strong>Luogo: {{ comune }}</strong>
+            </div>
+        </div>
+        
+        <div class="signature-box">
+            <div style="margin-top: -50px; font-size: 11px;">
+                Firma del dichiarante<br>
+                {{ nome }} {{ cognome }}
+            </div>
+        </div>
+    </div>
+
+    <!-- Note informative -->
+    <div style="margin-top: 30px; font-size: 10px; border-top: 1px solid #ccc; padding-top: 15px;">
+        <p><strong>NOTE:</strong></p>
+        <ul style="margin-left: 15px;">
+            <li>Il presente modulo deve essere presentato entro 30 giorni dall'inizio dell'attività</li>
+            <li>La presentazione può avvenire telematicamente tramite il portale Fisconline/Entratel</li>
+            <li>Per il regime forfettario sono previsti limiti di ricavi annui</li>
+            <li>Documento generato automaticamente da PraticAI - Verificare sempre i dati prima della presentazione</li>
+        </ul>
+    </div>
+</body>
+</html>
