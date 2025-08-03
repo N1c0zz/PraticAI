@@ -1,5 +1,3 @@
-// frontend/src/components/forms/PartitaIvaForm.tsx
-
 'use client'
 
 import { useState } from 'react'
@@ -9,16 +7,57 @@ import { Input } from '@/components/ui/input'
 import { Label } from '@/components/ui/label'
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select'
 import { Textarea } from '@/components/ui/textarea'
-import { AlertCircle, Download, FileText, Loader2, CheckCircle, User, MapPin, Mail, Briefcase } from 'lucide-react'
+import { AlertCircle, Download, FileText, Loader2, CheckCircle, User, MapPin, Mail, Briefcase, Calendar, Bot, ExternalLink, Info, AlertTriangle, Check } from 'lucide-react'
 import { Alert, AlertDescription } from '@/components/ui/alert'
 
 // Import dei nostri nuovi tipi e hooks
-import { PartitaIvaRequest } from '@/types/api'
+import { PartitaIvaFormData } from '@/lib/validations'
+import { useFormValidation } from '@/hooks/useFormValidation'
 import { usePartitaIva, useDownload } from '@/hooks/useApi'
+
+// Componente per feedback di validazione
+function FieldFeedback({ 
+  error, 
+  suggestion, 
+  success 
+}: { 
+  error?: string | null
+  suggestion?: string | null
+  success?: boolean
+}) {
+  if (success) {
+    return (
+      <div className="flex items-center gap-1 text-green-600 text-xs mt-1">
+        <Check className="w-3 h-3" />
+        <span>Valido</span>
+      </div>
+    )
+  }
+  
+  if (error) {
+    return (
+      <div className="flex items-center gap-1 text-red-600 text-xs mt-1">
+        <AlertTriangle className="w-3 h-3" />
+        <span>{error}</span>
+      </div>
+    )
+  }
+  
+  if (suggestion) {
+    return (
+      <div className="flex items-center gap-1 text-blue-600 text-xs mt-1">
+        <Info className="w-3 h-3" />
+        <span>{suggestion}</span>
+      </div>
+    )
+  }
+  
+  return null
+}
 
 export default function PartitaIvaForm() {
   // Stato del form
-  const [formData, setFormData] = useState<PartitaIvaRequest>({
+  const [formData, setFormData] = useState<PartitaIvaFormData>({
     nome: '',
     cognome: '',
     codiceFiscale: '',
@@ -36,21 +75,50 @@ export default function PartitaIvaForm() {
   })
 
   // Hooks per API calls
-  const { loading, error, result, generatePartitaIva, reset } = usePartitaIva()
+  const { loading, error: apiError, result, generatePartitaIva, reset } = usePartitaIva()
   const { downloadPdf, downloading } = useDownload()
+  
+  // Hook per validazione
+  const {
+    errors,
+    validateForm,
+    createFieldHandler,
+    createBlurHandler,
+    getFieldSuggestion,
+    clearErrors
+  } = useFormValidation()
 
-  const handleInputChange = (field: keyof PartitaIvaRequest, value: string) => {
+  // Helper per aggiornare formData
+  const updateFormData = (field: keyof PartitaIvaFormData, value: string) => {
     setFormData(prev => ({ ...prev, [field]: value }))
   }
 
+  // Crea handler per ogni campo
+  const createFieldHandlers = (fieldName: keyof PartitaIvaFormData) => ({
+    onChange: (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
+      const value = e.target.value
+      updateFormData(fieldName, value)
+      createFieldHandler(fieldName, () => {})(value)
+    },
+    onBlur: (e: React.FocusEvent<HTMLInputElement | HTMLTextAreaElement>) => {
+      createBlurHandler(fieldName, formData[fieldName])()
+    }
+  })
+
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
+    
+    // Validazione completa prima dell'invio
+    const validation = validateForm(formData)
+    if (!validation.isValid) {
+      return // Gli errori sono già visualizzati
+    }
+    
     await generatePartitaIva(formData)
   }
 
   const handleDownload = async () => {
     if (result?.pdfUrl) {
-      // Estrai file ID dall'URL (es. /api/download/abc123)
       const fileId = result.pdfUrl.split('/').pop()
       if (fileId) {
         const filename = `modulo_aa912_${formData.cognome}_${formData.nome}.pdf`
@@ -61,8 +129,7 @@ export default function PartitaIvaForm() {
 
   const handleReset = () => {
     reset()
-    // Resetta anche il form se vuoi
-    // setFormData({ ... valori vuoti ... })
+    clearErrors()
   }
 
   // Se abbiamo un risultato, mostra la success page
@@ -141,14 +208,15 @@ export default function PartitaIvaForm() {
             <Card>
               <CardHeader className="bg-gradient-to-r from-purple-50 to-blue-50">
                 <CardTitle className="flex items-center gap-2 text-purple-900">
-                  🤖 Guida Personalizzata AI
+                  <Bot className="w-5 h-5" />
+                  Guida Personalizzata AI
                 </CardTitle>
                 <p className="text-sm text-purple-700 mt-1">
                   Istruzioni step-by-step create appositamente per la tua situazione
                 </p>
               </CardHeader>
               <CardContent className="p-6">
-                <div className="prose prose-sm max-w-none">
+                <div className="ai-guide">
                   <div className="whitespace-pre-wrap text-sm leading-relaxed">
                     {result.guida}
                   </div>
@@ -171,7 +239,7 @@ export default function PartitaIvaForm() {
             Compila i Tuoi Dati
           </CardTitle>
           <p className="text-gray-600">
-            Tutti i campi contrassegnati con * sono obbligatori
+            Tutti i campi contrassegnati con * sono obbligatori. I dati vengono validati in tempo reale.
           </p>
         </CardHeader>
         <CardContent>
@@ -185,34 +253,50 @@ export default function PartitaIvaForm() {
               
               <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                 <div>
-                  <Label htmlFor="nome">Nome *</Label>
+                  <Label htmlFor="nome" className="mb-2 block">Nome *</Label>
                   <Input
                     id="nome"
                     value={formData.nome}
-                    onChange={(e) => handleInputChange('nome', e.target.value)}
+                    {...createFieldHandlers('nome')}
+                    className={errors.nome ? 'border-red-500' : ''}
                     required
+                  />
+                  <FieldFeedback 
+                    error={errors.nome?.message}
+                    success={!!formData.nome && !errors.nome}
                   />
                 </div>
                 <div>
-                  <Label htmlFor="cognome">Cognome *</Label>
+                  <Label htmlFor="cognome" className="mb-2 block">Cognome *</Label>
                   <Input
                     id="cognome"
                     value={formData.cognome}
-                    onChange={(e) => handleInputChange('cognome', e.target.value)}
+                    {...createFieldHandlers('cognome')}
+                    className={errors.cognome ? 'border-red-500' : ''}
                     required
+                  />
+                  <FieldFeedback 
+                    error={errors.cognome?.message}
+                    success={!!formData.cognome && !errors.cognome}
                   />
                 </div>
               </div>
 
               <div>
-                <Label htmlFor="codiceFiscale">Codice Fiscale *</Label>
+                <Label htmlFor="codiceFiscale" className="mb-2 block">Codice Fiscale *</Label>
                 <Input
                   id="codiceFiscale"
                   value={formData.codiceFiscale}
-                  onChange={(e) => handleInputChange('codiceFiscale', e.target.value.toUpperCase())}
+                  {...createFieldHandlers('codiceFiscale')}
                   maxLength={16}
                   placeholder="RSSMRA80A01H501X"
+                  className={errors.codiceFiscale ? 'border-red-500' : ''}
                   required
+                />
+                <FieldFeedback 
+                  error={errors.codiceFiscale?.message}
+                  suggestion={getFieldSuggestion('codiceFiscale', formData.codiceFiscale)}
+                  success={formData.codiceFiscale.length === 16 && !errors.codiceFiscale}
                 />
               </div>
             </div>
@@ -230,9 +314,14 @@ export default function PartitaIvaForm() {
                   <Input
                     id="indirizzo"
                     value={formData.indirizzo}
-                    onChange={(e) => handleInputChange('indirizzo', e.target.value)}
+                    {...createFieldHandlers('indirizzo')}
                     placeholder="Via Roma"
+                    className={errors.indirizzo ? 'border-red-500' : ''}
                     required
+                  />
+                  <FieldFeedback 
+                    error={errors.indirizzo?.message}
+                    success={!!formData.indirizzo && !errors.indirizzo}
                   />
                 </div>
                 <div>
@@ -240,9 +329,14 @@ export default function PartitaIvaForm() {
                   <Input
                     id="civico"
                     value={formData.civico}
-                    onChange={(e) => handleInputChange('civico', e.target.value)}
+                    {...createFieldHandlers('civico')}
                     placeholder="123"
+                    className={errors.civico ? 'border-red-500' : ''}
                     required
+                  />
+                  <FieldFeedback 
+                    error={errors.civico?.message}
+                    success={!!formData.civico && !errors.civico}
                   />
                 </div>
               </div>
@@ -253,10 +347,14 @@ export default function PartitaIvaForm() {
                   <Input
                     id="cap"
                     value={formData.cap}
-                    onChange={(e) => handleInputChange('cap', e.target.value)}
-                    maxLength={5}
+                    {...createFieldHandlers('cap')}
                     placeholder="20100"
+                    className={errors.cap ? 'border-red-500' : ''}
                     required
+                  />
+                  <FieldFeedback 
+                    error={errors.cap?.message}
+                    success={formData.cap.length === 5 && !errors.cap}
                   />
                 </div>
                 <div>
@@ -264,9 +362,14 @@ export default function PartitaIvaForm() {
                   <Input
                     id="comune"
                     value={formData.comune}
-                    onChange={(e) => handleInputChange('comune', e.target.value)}
+                    {...createFieldHandlers('comune')}
                     placeholder="Milano"
+                    className={errors.comune ? 'border-red-500' : ''}
                     required
+                  />
+                  <FieldFeedback 
+                    error={errors.comune?.message}
+                    success={!!formData.comune && !errors.comune}
                   />
                 </div>
                 <div>
@@ -274,10 +377,14 @@ export default function PartitaIvaForm() {
                   <Input
                     id="provincia"
                     value={formData.provincia}
-                    onChange={(e) => handleInputChange('provincia', e.target.value.toUpperCase())}
-                    maxLength={2}
+                    {...createFieldHandlers('provincia')}
                     placeholder="MI"
+                    className={errors.provincia ? 'border-red-500' : ''}
                     required
+                  />
+                  <FieldFeedback 
+                    error={errors.provincia?.message}
+                    success={formData.provincia.length === 2 && !errors.provincia}
                   />
                 </div>
               </div>
@@ -297,9 +404,14 @@ export default function PartitaIvaForm() {
                     id="email"
                     type="email"
                     value={formData.email}
-                    onChange={(e) => handleInputChange('email', e.target.value)}
+                    {...createFieldHandlers('email')}
                     placeholder="mario.rossi@email.com"
+                    className={errors.email ? 'border-red-500' : ''}
                     required
+                  />
+                  <FieldFeedback 
+                    error={errors.email?.message}
+                    success={!!formData.email && !errors.email}
                   />
                 </div>
                 <div>
@@ -307,8 +419,13 @@ export default function PartitaIvaForm() {
                   <Input
                     id="telefono"
                     value={formData.telefono || ''}
-                    onChange={(e) => handleInputChange('telefono', e.target.value)}
+                    {...createFieldHandlers('telefono')}
                     placeholder="333 123 4567"
+                    className={errors.telefono ? 'border-red-500' : ''}
+                  />
+                  <FieldFeedback 
+                    error={errors.telefono?.message}
+                    success={!!formData.telefono && !errors.telefono}
                   />
                 </div>
               </div>
@@ -326,10 +443,26 @@ export default function PartitaIvaForm() {
                 <Input
                   id="codiceAteco"
                   value={formData.codiceAteco}
-                  onChange={(e) => handleInputChange('codiceAteco', e.target.value)}
+                  {...createFieldHandlers('codiceAteco')}
                   placeholder="62.01.00"
+                  className={errors.codiceAteco ? 'border-red-500' : ''}
                   required
                 />
+                <FieldFeedback 
+                  error={errors.codiceAteco?.message}
+                  success={!!formData.codiceAteco && !errors.codiceAteco}
+                />
+                <p className="text-xs text-blue-600 mt-1">
+                  Non conosci il tuo codice ATECO? {' '}
+                  <a 
+                    href="https://www.codiceateco.it/" 
+                    target="_blank" 
+                    rel="noopener noreferrer"
+                    className="underline hover:no-underline inline-flex items-center gap-1"
+                  >
+                    Cerca qui <ExternalLink className="w-3 h-3" />
+                  </a>
+                </p>
               </div>
 
               <div>
@@ -337,11 +470,21 @@ export default function PartitaIvaForm() {
                 <Textarea
                   id="descrizioneAttivita"
                   value={formData.descrizioneAttivita}
-                  onChange={(e) => handleInputChange('descrizioneAttivita', e.target.value)}
+                  {...createFieldHandlers('descrizioneAttivita')}
                   placeholder="es. Sviluppo software e applicazioni web"
                   rows={3}
+                  className={errors.descrizioneAttivita ? 'border-red-500' : ''}
                   required
                 />
+                <div className="flex justify-between items-center mt-1">
+                  <FieldFeedback 
+                    error={errors.descrizioneAttivita?.message}
+                    success={!!formData.descrizioneAttivita && !errors.descrizioneAttivita}
+                  />
+                  <span className="text-xs text-gray-500">
+                    {formData.descrizioneAttivita.length}/200
+                  </span>
+                </div>
               </div>
 
               <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
@@ -349,9 +492,9 @@ export default function PartitaIvaForm() {
                   <Label htmlFor="regimeFiscale">Regime Fiscale *</Label>
                   <Select 
                     value={formData.regimeFiscale} 
-                    onValueChange={(value: 'forfettario' | 'ordinario') => handleInputChange('regimeFiscale', value)}
+                    onValueChange={(value: 'forfettario' | 'ordinario') => updateFormData('regimeFiscale', value)}
                   >
-                    <SelectTrigger>
+                    <SelectTrigger className={errors.regimeFiscale ? 'border-red-500' : ''}>
                       <SelectValue />
                     </SelectTrigger>
                     <SelectContent>
@@ -359,6 +502,10 @@ export default function PartitaIvaForm() {
                       <SelectItem value="ordinario">Regime Ordinario</SelectItem>
                     </SelectContent>
                   </Select>
+                  <FieldFeedback 
+                    error={errors.regimeFiscale?.message}
+                    suggestion={getFieldSuggestion('regimeFiscale', formData.regimeFiscale)}
+                  />
                 </div>
                 <div>
                   <Label htmlFor="dataInizio">Data Inizio Attività *</Label>
@@ -366,18 +513,25 @@ export default function PartitaIvaForm() {
                     id="dataInizio"
                     type="date"
                     value={formData.dataInizio}
-                    onChange={(e) => handleInputChange('dataInizio', e.target.value)}
+                    {...createFieldHandlers('dataInizio')}
+                    min={new Date().toISOString().split('T')[0]}
+                    max={new Date(Date.now() + 365 * 24 * 60 * 60 * 1000).toISOString().split('T')[0]}
+                    className={errors.dataInizio ? 'border-red-500' : ''}
                     required
+                  />
+                  <FieldFeedback 
+                    error={errors.dataInizio?.message}
+                    success={!!formData.dataInizio && !errors.dataInizio}
                   />
                 </div>
               </div>
             </div>
 
-            {/* Error Display */}
-            {error && (
+            {/* Error Display API */}
+            {apiError && (
               <Alert variant="destructive">
                 <AlertCircle className="h-4 w-4" />
-                <AlertDescription>{error}</AlertDescription>
+                <AlertDescription>{apiError}</AlertDescription>
               </Alert>
             )}
 

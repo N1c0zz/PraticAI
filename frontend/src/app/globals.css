@@ -119,4 +119,33 @@
   body {
     @apply bg-background text-foreground;
   }
+  
+  /* Maggiore spacing tra label e input nei form */
+  label {
+    @apply block mb-2;
+  }
+  
+  /* Stili per la guida AI */
+  .ai-guide h1,
+  .ai-guide h2,
+  .ai-guide h3 {
+    @apply font-semibold text-gray-900 mb-3 mt-6 first:mt-0;
+  }
+  
+  .ai-guide p {
+    @apply mb-4 text-gray-700 leading-relaxed;
+  }
+  
+  .ai-guide ul,
+  .ai-guide ol {
+    @apply mb-4 pl-6 space-y-1;
+  }
+  
+  .ai-guide li {
+    @apply text-gray-700;
+  }
+  
+  .ai-guide strong {
+    @apply font-semibold text-gray-900;
+  }
 }
