@@ -1,0 +1,77 @@
+# ----------------------
+# Node (Next.js frontend)
+# ----------------------
+frontend/node_modules/
+frontend/.next/
+frontend/.env.local
+frontend/.env
+
+# Log files
+*.log
+
+# ----------------------
+# Python (FastAPI backend)
+# ----------------------
+__pycache__/
+*.py[cod]
+*.egg
+*.egg-info/
+dist/
+build/
+.eggs/
+*.sqlite3
+backend/.env
+backend/.venv/
+backend/venv/
+backend/env/
+backend/.mypy_cache/
+backend/.pytest_cache/
+
+# pip environment files
+Pipfile.lock
+poetry.lock
+
+# Jupyter / IPython
+*.ipynb_checkpoints
+
+# ----------------------
+# Common AI / data files
+# ----------------------
+ai/__pycache__/
+ai/*.log
+ai/temp/
+ai/.env
+data/*.pdf
+data/*.docx
+data/*.html
+data/output/
+
+# ----------------------
+# System / OS
+# ----------------------
+.DS_Store
+Thumbs.db
+
+# ----------------------
+# VSCode / PyCharm / IDEs
+# ----------------------
+.vscode/
+.idea/
+*.swp
+
+# ----------------------
+# Git and repo meta
+# ----------------------
+*.orig
+*.rej
+*.bak
+*.tmp
+*.temp
+
+# ----------------------
+# PDF / generated files
+# ----------------------
+*.pdf
+*.docx
+*.zip
+*.tar.gz
