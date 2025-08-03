@@ -1,12 +1,3 @@
-# ----------------------
-# Node (Next.js frontend)
-# ----------------------
-frontend/node_modules/
-frontend/.next/
-frontend/.env.local
-frontend/.env
-frontend/*.json
-
 # Log files
 *.log
 
