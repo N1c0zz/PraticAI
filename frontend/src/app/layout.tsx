@@ -7,19 +7,23 @@ import './globals.css'
 const inter = Inter({ subsets: ['latin'] })
 
 export const metadata: Metadata = {
-  metadataBase: new URL('http://localhost:3000'), // Risolve warning metadataBase
+  metadataBase: new URL('http://localhost:3000'),
   title: 'PraticAI - Burocrazia Semplificata con AI',
   description: 'Genera automaticamente documenti burocratici con l\'aiuto dell\'intelligenza artificiale. Partita IVA, moduli fiscali e guide personalizzate.',
   keywords: ['burocrazia', 'partita iva', 'AI', 'documenti', 'fiscale', 'automatico'],
   authors: [{ name: 'PraticAI Team' }],
   
-  // Icone
+  // 🎯 FAVICON OTTIMIZZATA
   icons: {
     icon: [
       { url: '/favicon.svg', type: 'image/svg+xml' },
-      { url: '/favicon.ico', sizes: '32x32' }
+      { url: '/favicon-32x32.png', sizes: '32x32', type: 'image/png' },
+      { url: '/favicon-16x16.png', sizes: '16x16', type: 'image/png' }
     ],
-    apple: '/apple-touch-icon.png',
+    shortcut: '/favicon.ico',
+    apple: [
+      { url: '/apple-touch-icon.png', sizes: '180x180' }
+    ],
   },
   
   // Open Graph (social sharing)
@@ -44,11 +48,10 @@ export const metadata: Metadata = {
   robots: 'index, follow',
 }
 
-// Viewport separato (risolve warning viewport)
 export const viewport: Viewport = {
   width: 'device-width',
   initialScale: 1,
-  themeColor: '#2563EB',
+  themeColor: '#2563EB', // 🎯 Colore tema browser
 }
 
 export default function RootLayout({
@@ -59,8 +62,14 @@ export default function RootLayout({
   return (
     <html lang="it">
       <head>
+        {/* 🎯 FAVICON LINK TAGS ESPLICITI */}
         <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
-        <link rel="alternate icon" href="/favicon.ico" />
+        <link rel="icon" href="/favicon.ico" sizes="any" />
+        <link rel="apple-touch-icon" href="/apple-touch-icon.png" />
+        
+        {/* 🎯 META TAG PER TEMA COLORE */}
+        <meta name="theme-color" content="#2563EB" />
+        <meta name="msapplication-TileColor" content="#2563EB" />
       </head>
       <body className={inter.className}>{children}</body>
     </html>

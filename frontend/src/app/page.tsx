@@ -1,31 +1,17 @@
-// frontend/src/app/page.tsx
+// frontend/src/app/pages/page.tsx
 
 import Link from 'next/link'
 import { Button } from '@/components/ui/button'
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
 import { FileText, Zap, Shield, ArrowRight } from 'lucide-react'
-import Logo from '@/components/ui/Logo'
+import Header from '@/components/layout/Header'
+import Footer from '@/components/layout/Footer'
 
 export default function HomePage() {
   return (
     <div className="min-h-screen bg-gradient-to-br from-blue-50 to-purple-50">
       {/* Header */}
-      <header className="container mx-auto px-6 py-8">
-        <div className="flex items-center justify-between">
-          <Logo size="md" />
-          <nav className="hidden md:flex space-x-6">
-            <Link href="/partita-iva" className="text-gray-600 hover:text-blue-600 transition-colors">
-              Partita IVA
-            </Link>
-            <Link href="#features" className="text-gray-600 hover:text-blue-600 transition-colors">
-              Funzionalità
-            </Link>
-            <Link href="#about" className="text-gray-600 hover:text-blue-600 transition-colors">
-              Chi Siamo
-            </Link>
-          </nav>
-        </div>
-      </header>
+      <Header />
 
       {/* Hero Section */}
       <section className="container mx-auto px-6 py-16 text-center">
@@ -137,32 +123,7 @@ export default function HomePage() {
       </section>
 
       {/* Footer */}
-      <footer className="bg-gray-900 text-white py-8">
-        <div className="container mx-auto px-6">
-          <div className="flex flex-col md:flex-row justify-between items-center">
-            <div className="mb-4 md:mb-0">
-              <Logo size="sm" className="filter brightness-0 invert" />
-              <p className="text-gray-400 mt-2">Semplifichiamo la burocrazia italiana</p>
-            </div>
-            
-            <div className="flex space-x-6 text-sm">
-              <Link href="/privacy" className="text-gray-400 hover:text-white transition-colors">
-                Privacy
-              </Link>
-              <Link href="/terms" className="text-gray-400 hover:text-white transition-colors">
-                Termini
-              </Link>
-              <Link href="/contact" className="text-gray-400 hover:text-white transition-colors">
-                Contatti
-              </Link>
-            </div>
-          </div>
-          
-          <div className="border-t border-gray-800 mt-8 pt-6 text-center text-gray-400 text-sm">
-            © 2024 PraticAI. Tutti i diritti riservati.
-          </div>
-        </div>
-      </footer>
+      <Footer />
     </div>
   )
 }
