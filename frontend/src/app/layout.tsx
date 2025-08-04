@@ -1,10 +1,10 @@
 // frontend/src/app/layout.tsx
 
 import type { Metadata, Viewport } from 'next'
-import { Inter } from 'next/font/google'
+// import { Inter } from 'next/font/google'
 import './globals.css'
 
-const inter = Inter({ subsets: ['latin'] })
+// const inter = Inter({ subsets: ['latin'] })
 
 export const metadata: Metadata = {
   metadataBase: new URL('http://localhost:3000'),
@@ -71,7 +71,7 @@ export default function RootLayout({
         <meta name="theme-color" content="#2563EB" />
         <meta name="msapplication-TileColor" content="#2563EB" />
       </head>
-      <body className={inter.className}>{children}</body>
+      <body className="font-sans">{children}</body>
     </html>
   )
 }
