@@ -23,7 +23,7 @@ export default function HomePage() {
           
           <p className="text-xl text-gray-600 mb-8 leading-relaxed">
             Genera automaticamente documenti ufficiali, ricevi guide personalizzate e 
-            semplifica tutti i tuoi adempimenti burocratici con l'intelligenza artificiale.
+            semplifica tutti i tuoi adempimenti burocratici con l&apos;intelligenza artificiale.
           </p>
           
           <div className="flex flex-col sm:flex-row gap-4 justify-center">
@@ -34,9 +34,12 @@ export default function HomePage() {
               </Button>
             </Link>
             
-            <Button variant="outline" size="lg" className="text-lg px-8 py-3">
-              Scopri di più
-            </Button>
+            <Link href="/autocertificazione-residenza">
+              <Button variant="outline" size="lg" className="text-lg px-8 py-3">
+                Autocertificazione
+                <ArrowRight className="ml-2 h-5 w-5" />
+              </Button>
+            </Link>
           </div>
           
           <div className="mt-8 text-sm text-gray-500">
@@ -111,14 +114,22 @@ export default function HomePage() {
             Pronto a semplificare la tua burocrazia?
           </h2>
           <p className="text-xl mb-8 opacity-90">
-            Inizia subito con l'apertura della Partita IVA
+            Scegli il servizio di cui hai bisogno
           </p>
-          <Link href="/partita-iva">
-            <Button size="lg" variant="secondary" className="text-lg px-8 py-3">
-              Inizia Ora
-              <ArrowRight className="ml-2 h-5 w-5" />
-            </Button>
-          </Link>
+          <div className="flex flex-col sm:flex-row gap-4 justify-center">
+            <Link href="/partita-iva">
+              <Button size="lg" variant="secondary" className="text-lg px-8 py-3">
+                Partita IVA
+                <ArrowRight className="ml-2 h-5 w-5" />
+              </Button>
+            </Link>
+            <Link href="/autocertificazione-residenza">
+              <Button size="lg" variant="outline" className="text-lg px-8 py-3 bg-white/10 border-white/20 text-white hover:bg-white/20">
+                Autocertificazione
+                <ArrowRight className="ml-2 h-5 w-5" />
+              </Button>
+            </Link>
+          </div>
         </div>
       </section>
 

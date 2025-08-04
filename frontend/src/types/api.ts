@@ -17,6 +17,17 @@ export interface PartitaIvaRequest {
   telefono?: string
 }
 
+export interface AutocertificazioneRequest {
+  nome: string
+  cognome: string
+  codiceFiscale: string
+  luogoNascita: string
+  dataNascita: string
+  comuneResidenza: string
+  indirizzoResidenza: string
+  motivoRichiesta?: string
+}
+
 // Futuri tipi per altre pratiche
 export interface IseeRequest {
   // TODO: quando implementiamo ISEE
@@ -34,6 +45,11 @@ export interface BaseApiResponse {
 }
 
 export interface PartitaIvaResponse extends BaseApiResponse {
+  guida?: string
+  pdfUrl?: string
+}
+
+export interface AutocertificazioneResponse extends BaseApiResponse {
   guida?: string
   pdfUrl?: string
 }
@@ -60,9 +76,10 @@ export class ApiError extends Error {
 // ===== UTILITY TYPES =====
 
 export type ApiEndpoint = 
-  | '/api/generate'      // Partita IVA
-  | '/api/isee'          // ISEE (futuro)
-  | '/api/cud'           // CUD (futuro)
+  | '/api/generate'              // Partita IVA
+  | '/api/autocertificazione'    // Autocertificazione
+  | '/api/isee'                  // ISEE (futuro)
+  | '/api/cud'                   // CUD (futuro)
 
 export interface ApiCallOptions {
   retries?: number

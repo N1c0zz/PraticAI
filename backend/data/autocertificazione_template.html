@@ -1,0 +1,182 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Autocertificazione di Residenza</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            font-size: 12px;
+            line-height: 1.4;
+            margin: 20px;
+            color: #333;
+        }
+        
+        .header {
+            text-align: center;
+            margin-bottom: 30px;
+            border-bottom: 2px solid #333;
+            padding-bottom: 15px;
+        }
+        
+        .title {
+            font-size: 18px;
+            font-weight: bold;
+            text-transform: uppercase;
+            margin-bottom: 10px;
+        }
+        
+        .subtitle {
+            font-size: 14px;
+            margin-bottom: 5px;
+        }
+        
+        .content {
+            margin: 20px 0;
+        }
+        
+        .field-group {
+            margin-bottom: 15px;
+        }
+        
+        .field-label {
+            font-weight: bold;
+            display: inline-block;
+            min-width: 150px;
+        }
+        
+        .field-value {
+            border-bottom: 1px solid #666;
+            display: inline-block;
+            min-width: 200px;
+            padding-bottom: 2px;
+        }
+        
+        .declaration {
+            margin: 30px 0;
+            padding: 15px;
+            border: 1px solid #333;
+            background-color: #f9f9f9;
+        }
+        
+        .declaration-title {
+            font-weight: bold;
+            margin-bottom: 10px;
+            text-transform: uppercase;
+        }
+        
+        .signature-section {
+            margin-top: 40px;
+            display: flex;
+            justify-content: space-between;
+        }
+        
+        .signature-box {
+            text-align: center;
+            width: 200px;
+        }
+        
+        .signature-line {
+            border-bottom: 1px solid #333;
+            height: 30px;
+            margin-bottom: 5px;
+        }
+        
+        .legal-note {
+            margin-top: 30px;
+            font-size: 10px;
+            border-top: 1px solid #ccc;
+            padding-top: 10px;
+            color: #666;
+        }
+        
+        .checkbox {
+            display: inline-block;
+            width: 12px;
+            height: 12px;
+            border: 1px solid #333;
+            margin-right: 5px;
+            vertical-align: middle;
+        }
+        
+        .checkbox.checked::after {
+            content: "✓";
+            font-size: 10px;
+            line-height: 10px;
+        }
+    </style>
+</head>
+<body>
+    <div class="header">
+        <div class="title">Autocertificazione di Residenza</div>
+        <div class="subtitle">(Art. 46 - D.P.R. 28 dicembre 2000, n. 445)</div>
+        <div class="subtitle">Dichiarazione sostitutiva di certificazione</div>
+    </div>
+
+    <div class="content">
+        <div class="declaration">
+            <div class="declaration-title">Dichiarazione</div>
+            <p>Il/La sottoscritto/a, consapevole delle sanzioni penali previste dall'art. 76 del D.P.R. 28 dicembre 2000, n. 445, per le ipotesi di falsità in atti e dichiarazioni mendaci</p>
+        </div>
+
+        <div class="field-group">
+            <span class="field-label">Cognome:</span>
+            <span class="field-value">{{ cognome|upper }}</span>
+        </div>
+
+        <div class="field-group">
+            <span class="field-label">Nome:</span>
+            <span class="field-value">{{ nome|title }}</span>
+        </div>
+
+        <div class="field-group">
+            <span class="field-label">Codice Fiscale:</span>
+            <span class="field-value">{{ codiceFiscale|upper }}</span>
+        </div>
+
+        <div class="field-group">
+            <span class="field-label">Nato/a a:</span>
+            <span class="field-value">{{ luogoNascita }}</span>
+            <span class="field-label" style="margin-left: 20px;">il:</span>
+            <span class="field-value">{{ data_nascita_formatted }}</span>
+        </div>
+
+        <div class="declaration">
+            <div class="declaration-title">Dichiara</div>
+            <p>di essere residente nel Comune di <strong>{{ comuneResidenza }}</strong></p>
+            <p>al seguente indirizzo: <strong>{{ indirizzoResidenza }}</strong></p>
+            {% if motivo_richiesta and motivo_richiesta != 'Uso generico' %}
+            <p>La presente autocertificazione è rilasciata per: <strong>{{ motivo_richiesta }}</strong></p>
+            {% endif %}
+        </div>
+
+        <div class="legal-note">
+            <p><strong>AVVERTENZE:</strong></p>
+            <ul>
+                <li>L'autocertificazione è valida nei rapporti con la Pubblica Amministrazione e con i soggetti privati che vi consentono (art. 2, comma 2, L. 183/2011).</li>
+                <li>La presente dichiarazione non può essere prodotta agli organi di Polizia giudiziaria o amministrativa ad eccezione dei casi espressamente previsti (art. 2, comma 3, L. 183/2011).</li>
+                <li>Il dichiarante decade dai benefici eventualmente conseguenti al provvedimento emanato sulla base della dichiarazione non veritiera (art. 75 D.P.R. 445/2000).</li>
+                <li>La presente autocertificazione può essere allegata a istanze e atti diretti alla Pubblica Amministrazione senza autentica della sottoscrizione.</li>
+            </ul>
+        </div>
+
+        <div class="signature-section">
+            <div class="signature-box">
+                <div>Luogo e data</div>
+                <div class="signature-line">{{ comuneResidenza }}, {{ data_compilazione }}</div>
+            </div>
+            <div class="signature-box">
+                <div>Firma del dichiarante</div>
+                <div class="signature-line"></div>
+                <div style="font-size: 10px; margin-top: 5px;">{{ nome|title }} {{ cognome|upper }}</div>
+            </div>
+        </div>
+
+        <div class="legal-note" style="margin-top: 20px; text-align: center; font-size: 9px;">
+            <p>Documento generato automaticamente da PraticAI - {{ data_compilazione }}</p>
+            <p><strong>IMPORTANTE:</strong> Firmare il documento prima della presentazione</p>
+        </div>
+    </div>
+</body>
+</html>

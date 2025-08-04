@@ -137,6 +137,80 @@ export const partitaIvaSchema = z.object({
     )
 })
 
+// Schema per Autocertificazione di Residenza
+export const autocertificazioneSchema = z.object({
+  // Dati personali
+  nome: z
+    .string()
+    .min(1, "Nome richiesto")
+    .min(2, "Il nome deve essere di almeno 2 caratteri")
+    .max(50, "Il nome non può superare 50 caratteri")
+    .regex(/^[a-zA-ZÀ-ÿ\s']+$/, "Il nome può contenere solo lettere, spazi e apostrofi"),
+  
+  cognome: z
+    .string()
+    .min(1, "Cognome richiesto")
+    .min(2, "Il cognome deve essere di almeno 2 caratteri") 
+    .max(50, "Il cognome non può superare 50 caratteri")
+    .regex(/^[a-zA-ZÀ-ÿ\s']+$/, "Il cognome può contenere solo lettere, spazi e apostrofi"),
+  
+  codiceFiscale: z
+    .string()
+    .min(1, "Codice fiscale richiesto")
+    .length(16, "Il codice fiscale deve essere di 16 caratteri")
+    .refine(validateCodiceFiscale, "Codice fiscale non valido")
+    .transform(val => val.toUpperCase()),
+  
+  // Nascita
+  luogoNascita: z
+    .string()
+    .min(1, "Luogo di nascita richiesto")
+    .min(2, "Nome del luogo troppo corto")
+    .max(50, "Nome del luogo troppo lungo")
+    .regex(/^[a-zA-ZÀ-ÿ\s'.-]+$/, "Nome del luogo non valido"),
+  
+  dataNascita: z
+    .string()
+    .min(1, "Data di nascita richiesta")
+    .refine(
+      (val) => {
+        const date = new Date(val)
+        const today = new Date()
+        const minDate = new Date()
+        minDate.setFullYear(today.getFullYear() - 120) // Max 120 anni
+        
+        return date <= today && date >= minDate
+      },
+      "Data di nascita non valida"
+    ),
+  
+  // Residenza
+  comuneResidenza: z
+    .string()
+    .min(1, "Comune di residenza richiesto")
+    .min(2, "Nome comune troppo corto")
+    .max(50, "Nome comune troppo lungo")
+    .regex(/^[a-zA-ZÀ-ÿ\s'.-]+$/, "Nome comune non valido"),
+  
+  indirizzoResidenza: z
+    .string()
+    .min(1, "Indirizzo di residenza richiesto")
+    .min(5, "Inserisci un indirizzo completo")
+    .max(200, "L'indirizzo non può superare 200 caratteri"),
+  
+  // Campo opzionale
+  motivoRichiesta: z
+    .string()
+    .max(300, "Il motivo non può superare 300 caratteri")
+    .optional()
+})
+
+// Tipo TypeScript inferito dallo schema
+export type AutocertificazioneFormData = z.infer<typeof autocertificazioneSchema>
+
+// Schema per validazione parziale (field-by-field)  
+export const autocertificazionePartialSchema = autocertificazioneSchema.partial()
+
 // Tipo TypeScript inferito dallo schema
 export type PartitaIvaFormData = z.infer<typeof partitaIvaSchema>
 

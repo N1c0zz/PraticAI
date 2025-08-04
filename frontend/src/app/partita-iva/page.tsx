@@ -41,7 +41,7 @@ export default function PartitaIvaPage() {
               </div>
               <div className="flex items-center gap-2">
                 <Download className="w-4 h-4" />
-                <span>PDF pronto per l'uso</span>
+                <span>PDF pronto per l&apos;uso</span>
               </div>
             </div>
           </div>
