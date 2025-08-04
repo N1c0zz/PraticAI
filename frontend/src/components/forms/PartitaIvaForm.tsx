@@ -146,7 +146,7 @@ export default function PartitaIvaForm() {
           </div>
           <p className="text-green-700">
             Il modulo AA9/12 e la guida personalizzata sono pronti. 
-            Segui le istruzioni qui sotto per completare l'apertura della tua Partita IVA.
+            Segui le istruzioni qui sotto per completare l&apos;apertura della tua Partita IVA.
           </p>
         </div>
 
@@ -169,7 +169,7 @@ export default function PartitaIvaForm() {
                     Documento Ufficiale Pronto
                   </h3>
                   <p className="text-sm text-gray-600 mb-4">
-                    Il modulo è precompilato con i tuoi dati e pronto per la presentazione all'Agenzia delle Entrate.
+                    Il modulo è precompilato con i tuoi dati e pronto per la presentazione all&apos;Agenzia delle Entrate.
                   </p>
                 </div>
                 

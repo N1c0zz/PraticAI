@@ -3,6 +3,8 @@
 import { 
   PartitaIvaRequest, 
   PartitaIvaResponse, 
+  AutocertificazioneRequest,
+  AutocertificazioneResponse,
   ApiError, 
   ApiCallOptions,
   BaseApiResponse 
@@ -125,6 +127,16 @@ class PraticAIApiClient {
    */
   async generatePartitaIva(data: PartitaIvaRequest): Promise<PartitaIvaResponse> {
     return this.request<PartitaIvaResponse>('/api/generate', {
+      method: 'POST',
+      body: JSON.stringify(data),
+    })
+  }
+
+  /**
+   * Genera autocertificazione di residenza
+   */
+  async generateAutocertificazione(data: AutocertificazioneRequest): Promise<AutocertificazioneResponse> {
+    return this.request<AutocertificazioneResponse>('/api/autocertificazione', {
       method: 'POST',
       body: JSON.stringify(data),
     })

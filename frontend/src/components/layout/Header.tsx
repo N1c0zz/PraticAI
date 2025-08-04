@@ -23,6 +23,12 @@ export default function Header({ className = "" }: HeaderProps) {
             Partita IVA
           </Link>
           <Link 
+            href="/autocertificazione-residenza" 
+            className="text-gray-600 hover:text-blue-600 transition-colors"
+          >
+            Autocertificazione
+          </Link>
+          <Link 
             href="#features" 
             className="text-gray-600 hover:text-blue-600 transition-colors"
           >

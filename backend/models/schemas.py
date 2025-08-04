@@ -42,6 +42,31 @@ class PartitaIvaRequest(BaseModel):
             raise ValueError('La provincia deve essere di 2 caratteri')
         return v
 
+class AutocertificazioneRequest(BaseModel):
+    nome: str
+    cognome: str
+    codiceFiscale: str
+    luogoNascita: str
+    dataNascita: str  # Format: YYYY-MM-DD
+    comuneResidenza: str
+    indirizzoResidenza: str
+    motivoRichiesta: Optional[str] = None
+    
+    @validator('codiceFiscale')
+    def validate_codice_fiscale(cls, v):
+        v = v.upper().strip()
+        if len(v) != 16:
+            raise ValueError('Il codice fiscale deve essere di 16 caratteri')
+        return v
+    
+    @validator('dataNascita')
+    def validate_data_nascita(cls, v):
+        try:
+            date.fromisoformat(v)
+        except ValueError:
+            raise ValueError('Formato data non valido. Utilizzare YYYY-MM-DD')
+        return v
+
 class GenerateResponse(BaseModel):
     success: bool
     guida: Optional[str] = None

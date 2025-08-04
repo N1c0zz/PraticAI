@@ -64,6 +64,53 @@ def generate_partita_iva_guide(data: Dict[str, Any]) -> Optional[str]:
         print(f"Errore nella generazione della guida AI: {e}")
         return f"⚠️ Guida AI non disponibile: {str(e)}. Il modulo AA9/12 è stato generato correttamente."
 
+def generate_autocertificazione_guide(data: Dict[str, Any]) -> Optional[str]:
+    """
+    Generate personalized Autocertificazione guide using GPT-4
+    """
+    try:
+        # Get OpenAI client
+        client = get_openai_client()
+        if not client:
+            return "⚠️ Guida AI non disponibile: API key mancante. L'autocertificazione è stata generata correttamente."
+        
+        from ai.prompts.autocertificazione import AUTOCERTIFICAZIONE_PROMPT
+        
+        # Format prompt with user data
+        formatted_prompt = AUTOCERTIFICAZIONE_PROMPT.format(
+            nome=data.get('nome', ''),
+            cognome=data.get('cognome', ''),
+            codiceFiscale=data.get('codiceFiscale', ''),
+            luogoNascita=data.get('luogoNascita', ''),
+            dataNascita=format_date_for_prompt(data.get('dataNascita', '')),
+            comuneResidenza=data.get('comuneResidenza', ''),
+            indirizzoResidenza=data.get('indirizzoResidenza', ''),
+            motivoRichiesta=data.get('motivoRichiesta', 'Non specificato')
+        )
+        
+        # Call OpenAI API
+        response = client.chat.completions.create(
+            model="gpt-4-turbo-preview",
+            messages=[
+                {
+                    "role": "system",
+                    "content": "Sei un esperto consulente di pratiche burocratiche italiane specializzato in autocertificazioni. Rispondi sempre in italiano con informazioni accurate e aggiornate sulla normativa italiana."
+                },
+                {
+                    "role": "user",
+                    "content": formatted_prompt
+                }
+            ],
+            max_tokens=2000,
+            temperature=0.3
+        )
+        
+        return response.choices[0].message.content.strip()
+        
+    except Exception as e:
+        print(f"Errore nella generazione della guida AI per Autocertificazione: {e}")
+        return f"⚠️ Guida AI non disponibile: {str(e)}. L'autocertificazione è stata generata correttamente."
+
 def format_date_for_prompt(date_string: str) -> str:
     """
     Format date for better readability in prompt
