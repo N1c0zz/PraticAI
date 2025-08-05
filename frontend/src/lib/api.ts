@@ -7,6 +7,8 @@ import {
   AutocertificazioneResponse,
   AutocertificazioneNascitaRequest,
   AutocertificazioneNascitaResponse,
+  AutocertificazioneStatoCivileRequest,
+  AutocertificazioneStatoCivileResponse,
   ApiError, 
   ApiCallOptions,
   BaseApiResponse 
@@ -149,6 +151,16 @@ class PraticAIApiClient {
    */
   async generateAutocertificazioneNascita(data: AutocertificazioneNascitaRequest): Promise<AutocertificazioneNascitaResponse> {
     return this.request<AutocertificazioneNascitaResponse>('/api/autocertificazione-nascita', {
+      method: 'POST',
+      body: JSON.stringify(data),
+    })
+  }
+
+  /**
+   * Genera autocertificazione di stato civile
+   */
+  async generateAutocertificazioneStatoCivile(data: AutocertificazioneStatoCivileRequest): Promise<AutocertificazioneStatoCivileResponse> {
+    return this.request<AutocertificazioneStatoCivileResponse>('/api/autocertificazione-stato-civile', {
       method: 'POST',
       body: JSON.stringify(data),
     })
