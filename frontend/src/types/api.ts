@@ -45,6 +45,32 @@ export interface AutocertificazioneNascitaRequest {
   motivoRichiesta?: string
 }
 
+export interface AutocertificazioneStatoCivileRequest {
+  // Dati personali
+  nome: string
+  cognome: string
+  codiceFiscale: string
+  luogoNascita: string
+  dataNascita: string
+  comuneResidenza: string
+  indirizzoResidenza: string
+  
+  // Stato civile
+  statoCivile: 'celibe_nubile' | 'coniugato' | 'separato' | 'divorziato' | 'vedovo'
+  
+  // Dati aggiuntivi condizionali (opzionali)
+  nomeConiuge?: string
+  cognomeConiuge?: string
+  dataMatrimonio?: string
+  comuneMatrimonio?: string
+  dataSeparazione?: string
+  dataDivorzio?: string
+  tribunaleCompetente?: string
+  dataDecesso?: string
+  
+  motivoRichiesta?: string
+}
+
 // Futuri tipi per altre pratiche
 export interface IseeRequest {
   // TODO: quando implementiamo ISEE
@@ -76,6 +102,11 @@ export interface AutocertificazioneNascitaResponse extends BaseApiResponse {
   pdfUrl?: string
 }
 
+export interface AutocertificazioneStatoCivileResponse extends BaseApiResponse {
+  guida?: string
+  pdfUrl?: string
+}
+
 export interface IseeResponse extends BaseApiResponse {
   // TODO: quando implementiamo ISEE
   guida?: string
@@ -101,6 +132,7 @@ export type ApiEndpoint =
   | '/api/generate'                    // Partita IVA
   | '/api/autocertificazione'          // Autocertificazione Residenza
   | '/api/autocertificazione-nascita'  // Autocertificazione Nascita
+  | '/api/autocertificazione-stato-civile'  // Autocertificazione Stato Civile
   | '/api/isee'                        // ISEE (futuro)
   | '/api/cud'                         // CUD (futuro)
 

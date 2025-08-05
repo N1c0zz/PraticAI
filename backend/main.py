@@ -16,6 +16,7 @@ load_dotenv()
 from routes.generate import router as generate_router
 from routes.autocertificazione import router as autocertificazione_router
 from routes.autocertificazione_nascita import router as autocertificazione_nascita_router
+from routes.autocertificazione_stato_civile import router as autocertificazione_stato_civile_router
 
 app = FastAPI(
     title="PraticAI API",
@@ -36,6 +37,7 @@ app.add_middleware(
 app.include_router(generate_router, prefix="/api")
 app.include_router(autocertificazione_router, prefix="/api")
 app.include_router(autocertificazione_nascita_router, prefix="/api")
+app.include_router(autocertificazione_stato_civile_router, prefix="/api")
 
 @app.get("/")
 async def root():
