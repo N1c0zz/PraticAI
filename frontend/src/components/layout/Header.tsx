@@ -26,7 +26,13 @@ export default function Header({ className = "" }: HeaderProps) {
             href="/autocertificazione-residenza" 
             className="text-gray-600 hover:text-blue-600 transition-colors"
           >
-            Autocertificazione
+            Autocertificazione Residenza
+          </Link>
+          <Link 
+            href="/autocertificazione-nascita" 
+            className="text-gray-600 hover:text-blue-600 transition-colors"
+          >
+            Autocertificazione Nascita
           </Link>
           <Link 
             href="#features" 

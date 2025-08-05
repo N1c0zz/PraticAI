@@ -28,6 +28,23 @@ export interface AutocertificazioneRequest {
   motivoRichiesta?: string
 }
 
+export interface AutocertificazioneNascitaRequest {
+  // Dati del dichiarante
+  nomeDichiarante: string
+  cognomeDichiarante: string
+  codiceFiscaleDichiarante: string
+  
+  // Dati del nato/nata
+  nomeNato: string
+  cognomeNato: string
+  dataNascita: string
+  luogoNascita: string
+  provinciaNascita: string
+  ospedale?: string
+  
+  motivoRichiesta?: string
+}
+
 // Futuri tipi per altre pratiche
 export interface IseeRequest {
   // TODO: quando implementiamo ISEE
@@ -54,6 +71,11 @@ export interface AutocertificazioneResponse extends BaseApiResponse {
   pdfUrl?: string
 }
 
+export interface AutocertificazioneNascitaResponse extends BaseApiResponse {
+  guida?: string
+  pdfUrl?: string
+}
+
 export interface IseeResponse extends BaseApiResponse {
   // TODO: quando implementiamo ISEE
   guida?: string
@@ -76,10 +98,11 @@ export class ApiError extends Error {
 // ===== UTILITY TYPES =====
 
 export type ApiEndpoint = 
-  | '/api/generate'              // Partita IVA
-  | '/api/autocertificazione'    // Autocertificazione
-  | '/api/isee'                  // ISEE (futuro)
-  | '/api/cud'                   // CUD (futuro)
+  | '/api/generate'                    // Partita IVA
+  | '/api/autocertificazione'          // Autocertificazione Residenza
+  | '/api/autocertificazione-nascita'  // Autocertificazione Nascita
+  | '/api/isee'                        // ISEE (futuro)
+  | '/api/cud'                         // CUD (futuro)
 
 export interface ApiCallOptions {
   retries?: number

@@ -36,7 +36,14 @@ export default function HomePage() {
             
             <Link href="/autocertificazione-residenza">
               <Button variant="outline" size="lg" className="text-lg px-8 py-3">
-                Autocertificazione
+                Autocertificazione Residenza
+                <ArrowRight className="ml-2 h-5 w-5" />
+              </Button>
+            </Link>
+            
+            <Link href="/autocertificazione-nascita">
+              <Button variant="outline" size="lg" className="text-lg px-8 py-3">
+                Autocertificazione Nascita
                 <ArrowRight className="ml-2 h-5 w-5" />
               </Button>
             </Link>
@@ -125,7 +132,13 @@ export default function HomePage() {
             </Link>
             <Link href="/autocertificazione-residenza">
               <Button size="lg" variant="outline" className="text-lg px-8 py-3 bg-white/10 border-white/20 text-white hover:bg-white/20">
-                Autocertificazione
+                Autocertificazione Residenza
+                <ArrowRight className="ml-2 h-5 w-5" />
+              </Button>
+            </Link>
+            <Link href="/autocertificazione-nascita">
+              <Button size="lg" variant="outline" className="text-lg px-8 py-3 bg-white/10 border-white/20 text-white hover:bg-white/20">
+                Autocertificazione Nascita
                 <ArrowRight className="ml-2 h-5 w-5" />
               </Button>
             </Link>
