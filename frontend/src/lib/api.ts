@@ -5,6 +5,8 @@ import {
   PartitaIvaResponse, 
   AutocertificazioneRequest,
   AutocertificazioneResponse,
+  AutocertificazioneNascitaRequest,
+  AutocertificazioneNascitaResponse,
   ApiError, 
   ApiCallOptions,
   BaseApiResponse 
@@ -20,7 +22,7 @@ class PraticAIApiClient {
 
   constructor() {
     // In produzione sarà l'URL del tuo backend
-    this.baseUrl = process.env.NEXT_PUBLIC_API_URL || ''
+    this.baseUrl = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:8000'
   }
 
   /**
@@ -137,6 +139,16 @@ class PraticAIApiClient {
    */
   async generateAutocertificazione(data: AutocertificazioneRequest): Promise<AutocertificazioneResponse> {
     return this.request<AutocertificazioneResponse>('/api/autocertificazione', {
+      method: 'POST',
+      body: JSON.stringify(data),
+    })
+  }
+
+  /**
+   * Genera autocertificazione di nascita
+   */
+  async generateAutocertificazioneNascita(data: AutocertificazioneNascitaRequest): Promise<AutocertificazioneNascitaResponse> {
+    return this.request<AutocertificazioneNascitaResponse>('/api/autocertificazione-nascita', {
       method: 'POST',
       body: JSON.stringify(data),
     })

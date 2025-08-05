@@ -137,6 +137,92 @@ export const partitaIvaSchema = z.object({
     )
 })
 
+// Schema per Autocertificazione di Nascita
+export const autocertificazioneNascitaSchema = z.object({
+  // Dati del dichiarante
+  nomeDichiarante: z
+    .string()
+    .min(1, "Nome dichiarante richiesto")
+    .min(2, "Il nome deve essere di almeno 2 caratteri")
+    .max(50, "Il nome non può superare 50 caratteri")
+    .regex(/^[a-zA-ZÀ-ÿ\s']+$/, "Il nome può contenere solo lettere, spazi e apostrofi"),
+  
+  cognomeDichiarante: z
+    .string()
+    .min(1, "Cognome dichiarante richiesto")
+    .min(2, "Il cognome deve essere di almeno 2 caratteri") 
+    .max(50, "Il cognome non può superare 50 caratteri")
+    .regex(/^[a-zA-ZÀ-ÿ\s']+$/, "Il cognome può contenere solo lettere, spazi e apostrofi"),
+  
+  codiceFiscaleDichiarante: z
+    .string()
+    .min(1, "Codice fiscale dichiarante richiesto")
+    .length(16, "Il codice fiscale deve essere di 16 caratteri")
+    .refine(validateCodiceFiscale, "Codice fiscale non valido")
+    .transform(val => val.toUpperCase()),
+  
+  // Dati del nato/nata
+  nomeNato: z
+    .string()
+    .min(1, "Nome del nato/nata richiesto")
+    .min(2, "Il nome deve essere di almeno 2 caratteri")
+    .max(50, "Il nome non può superare 50 caratteri")
+    .regex(/^[a-zA-ZÀ-ÿ\s']+$/, "Il nome può contenere solo lettere, spazi e apostrofi"),
+  
+  cognomeNato: z
+    .string()
+    .min(1, "Cognome del nato/nata richiesto")
+    .min(2, "Il cognome deve essere di almeno 2 caratteri") 
+    .max(50, "Il cognome non può superare 50 caratteri")
+    .regex(/^[a-zA-ZÀ-ÿ\s']+$/, "Il cognome può contenere solo lettere, spazi e apostrofi"),
+  
+  dataNascita: z
+    .string()
+    .min(1, "Data di nascita richiesta")
+    .refine(
+      (val) => {
+        const date = new Date(val)
+        const today = new Date()
+        const minDate = new Date()
+        minDate.setFullYear(today.getFullYear() - 120) // Max 120 anni
+        
+        return date <= today && date >= minDate
+      },
+      "Data di nascita non valida o futura"
+    ),
+  
+  luogoNascita: z
+    .string()
+    .min(1, "Luogo di nascita richiesto")
+    .min(2, "Nome del luogo troppo corto")
+    .max(50, "Nome del luogo troppo lungo")
+    .regex(/^[a-zA-ZÀ-ÿ\s'.-]+$/, "Nome del luogo non valido"),
+  
+  provinciaNascita: z
+    .string()
+    .min(1, "Provincia richiesta")
+    .length(2, "La provincia deve essere di 2 caratteri")
+    .regex(/^[A-Z]{2}$/, "Formato provincia non valido (es. RM, MI)")
+    .transform(val => val.toUpperCase()),
+  
+  // Campi opzionali
+  ospedale: z
+    .string()
+    .max(100, "Nome ospedale troppo lungo")
+    .optional(),
+  
+  motivoRichiesta: z
+    .string()
+    .max(300, "Il motivo non può superare 300 caratteri")
+    .optional()
+})
+
+// Tipo TypeScript inferito dallo schema
+export type AutocertificazioneNascitaFormData = z.infer<typeof autocertificazioneNascitaSchema>
+
+// Schema per validazione parziale (field-by-field)  
+export const autocertificazioneNascitaPartialSchema = autocertificazioneNascitaSchema.partial()
+
 // Schema per Autocertificazione di Residenza
 export const autocertificazioneSchema = z.object({
   // Dati personali

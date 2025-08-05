@@ -111,6 +111,55 @@ def generate_autocertificazione_guide(data: Dict[str, Any]) -> Optional[str]:
         print(f"Errore nella generazione della guida AI per Autocertificazione: {e}")
         return f"⚠️ Guida AI non disponibile: {str(e)}. L'autocertificazione è stata generata correttamente."
 
+def generate_autocertificazione_nascita_guide(data: Dict[str, Any]) -> Optional[str]:
+    """
+    Generate personalized Autocertificazione di Nascita guide using GPT-4
+    """
+    try:
+        # Get OpenAI client
+        client = get_openai_client()
+        if not client:
+            return "⚠️ Guida AI non disponibile: API key mancante. L'autocertificazione di nascita è stata generata correttamente."
+        
+        from ai.prompts.autocertificazione_nascita import AUTOCERTIFICAZIONE_NASCITA_PROMPT
+        
+        # Format prompt with user data
+        formatted_prompt = AUTOCERTIFICAZIONE_NASCITA_PROMPT.format(
+            nomeDichiarante=data.get('nomeDichiarante', ''),
+            cognomeDichiarante=data.get('cognomeDichiarante', ''),
+            codiceFiscaleDichiarante=data.get('codiceFiscaleDichiarante', ''),
+            nomeNato=data.get('nomeNato', ''),
+            cognomeNato=data.get('cognomeNato', ''),
+            dataNascita=format_date_for_prompt(data.get('dataNascita', '')),
+            luogoNascita=data.get('luogoNascita', ''),
+            provinciaNascita=data.get('provinciaNascita', ''),
+            ospedale=data.get('ospedale', 'Non specificato'),
+            motivoRichiesta=data.get('motivoRichiesta', 'Non specificato')
+        )
+        
+        # Call OpenAI API
+        response = client.chat.completions.create(
+            model="gpt-4-turbo-preview",
+            messages=[
+                {
+                    "role": "system",
+                    "content": "Sei un esperto consulente di pratiche burocratiche italiane specializzato in autocertificazioni di nascita. Rispondi sempre in italiano con informazioni accurate e aggiornate sulla normativa italiana."
+                },
+                {
+                    "role": "user",
+                    "content": formatted_prompt
+                }
+            ],
+            max_tokens=2000,
+            temperature=0.3
+        )
+        
+        return response.choices[0].message.content.strip()
+        
+    except Exception as e:
+        print(f"Errore nella generazione della guida AI per Autocertificazione di Nascita: {e}")
+        return f"⚠️ Guida AI non disponibile: {str(e)}. L'autocertificazione di nascita è stata generata correttamente."
+
 def format_date_for_prompt(date_string: str) -> str:
     """
     Format date for better readability in prompt

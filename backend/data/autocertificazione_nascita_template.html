@@ -1,0 +1,204 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Autocertificazione di Nascita</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            font-size: 12px;
+            line-height: 1.4;
+            margin: 20px;
+            color: #333;
+        }
+        
+        .header {
+            text-align: center;
+            margin-bottom: 30px;
+            border-bottom: 2px solid #333;
+            padding-bottom: 15px;
+        }
+        
+        .title {
+            font-size: 18px;
+            font-weight: bold;
+            text-transform: uppercase;
+            margin-bottom: 10px;
+        }
+        
+        .subtitle {
+            font-size: 14px;
+            margin-bottom: 5px;
+        }
+        
+        .content {
+            margin: 20px 0;
+        }
+        
+        .field-group {
+            margin-bottom: 15px;
+        }
+        
+        .field-label {
+            font-weight: bold;
+            display: inline-block;
+            min-width: 150px;
+        }
+        
+        .field-value {
+            border-bottom: 1px solid #666;
+            display: inline-block;
+            min-width: 200px;
+            padding-bottom: 2px;
+        }
+        
+        .section {
+            margin: 25px 0;
+            padding: 15px;
+            border: 1px solid #ddd;
+            background-color: #fafafa;
+        }
+        
+        .section-title {
+            font-size: 14px;
+            font-weight: bold;
+            margin-bottom: 15px;
+            text-transform: uppercase;
+            color: #2c3e50;
+        }
+        
+        .declaration {
+            margin: 25px 0;
+            padding: 15px;
+            border: 1px solid #333;
+            background-color: #f9f9f9;
+        }
+        
+        .declaration-text {
+            font-weight: bold;
+            text-align: center;
+            margin-bottom: 20px;
+        }
+        
+        .signature-section {
+            margin-top: 40px;
+            display: flex;
+            justify-content: space-between;
+        }
+        
+        .signature-box {
+            width: 45%;
+            text-align: center;
+        }
+        
+        .signature-line {
+            border-bottom: 1px solid #333;
+            width: 100%;
+            height: 40px;
+            margin-bottom: 5px;
+        }
+        
+        .legal-notes {
+            margin-top: 30px;
+            font-size: 10px;
+            line-height: 1.3;
+            color: #666;
+            border-top: 1px solid #ddd;
+            padding-top: 15px;
+        }
+        
+        .legal-title {
+            font-weight: bold;
+            margin-bottom: 10px;
+        }
+    </style>
+</head>
+<body>
+    <div class="header">
+        <div class="title">Autocertificazione di Nascita</div>
+        <div class="subtitle">(ai sensi del D.P.R. 28 dicembre 2000, n. 445)</div>
+    </div>
+
+    <div class="content">
+        <div class="section">
+            <div class="section-title">Dati del Dichiarante</div>
+            
+            <div class="field-group">
+                <span class="field-label">Nome:</span>
+                <span class="field-value">{{ nomeDichiarante }}</span>
+            </div>
+            
+            <div class="field-group">
+                <span class="field-label">Cognome:</span>
+                <span class="field-value">{{ cognomeDichiarante }}</span>
+            </div>
+            
+            <div class="field-group">
+                <span class="field-label">Codice Fiscale:</span>
+                <span class="field-value">{{ codiceFiscaleDichiarante }}</span>
+            </div>
+        </div>
+
+        <div class="declaration">
+            <div class="declaration-text">DICHIARA</div>
+            <p>sotto la propria responsabilità, consapevole delle sanzioni penali previste dall'art. 76 del D.P.R. 445/2000 per le ipotesi di falsità in atti e dichiarazioni mendaci;</p>
+        </div>
+
+        <div class="section">
+            <div class="section-title">Dati di Nascita</div>
+            
+            <div class="field-group">
+                <span class="field-label">che</span>
+                <span class="field-value">{{ nomeNato }} {{ cognomeNato }}</span>
+            </div>
+            
+            <div class="field-group">
+                <span class="field-label">è nato/a il:</span>
+                <span class="field-value">{{ data_nascita_formatted }}</span>
+            </div>
+            
+            <div class="field-group">
+                <span class="field-label">nel Comune di:</span>
+                <span class="field-value">{{ luogoNascita }} ({{ provinciaNascita }})</span>
+            </div>
+            
+            {% if ospedale and ospedale != "Non specificato" %}
+            <div class="field-group">
+                <span class="field-label">presso:</span>
+                <span class="field-value">{{ ospedale }}</span>
+            </div>
+            {% endif %}
+        </div>
+
+        {% if motivoRichiesta and motivoRichiesta != "Non specificato" %}
+        <div class="section">
+            <div class="section-title">Motivo della Richiesta</div>
+            <div class="field-group">
+                <span class="field-value">{{ motivoRichiesta }}</span>
+            </div>
+        </div>
+        {% endif %}
+
+        <div class="signature-section">
+            <div class="signature-box">
+                <div>Data: {{ data_compilazione }}</div>
+            </div>
+            <div class="signature-box">
+                <div class="signature-line"></div>
+                <div>Firma del Dichiarante</div>
+                <div><small>{{ nomeDichiarante }} {{ cognomeDichiarante }}</small></div>
+            </div>
+        </div>
+
+        <div class="legal-notes">
+            <div class="legal-title">Note Legali:</div>
+            <p><strong>• Responsabilità:</strong> Il sottoscritto, consapevole delle responsabilità penali cui va incontro in caso di dichiarazioni mendaci, sotto la propria responsabilità dichiara che le informazioni riportate corrispondono al vero.</p>
+            <p><strong>• Riferimenti normativi:</strong> La presente autocertificazione è resa ai sensi del D.P.R. 28 dicembre 2000, n. 445 "Testo unico delle disposizioni legislative e regolamentari in materia di documentazione amministrativa".</p>
+            <p><strong>• Validità:</strong> L'autocertificazione non ha scadenza quando riguarda stati, qualità personali e fatti che non sono soggetti a modificazioni (art. 46 DPR 445/2000).</p>
+            <p><strong>• Utilizzo:</strong> Può essere utilizzata nei rapporti con la Pubblica Amministrazione e con i soggetti che erogano servizi pubblici. Per i rapporti con soggetti privati, l'autocertificazione è utilizzabile solo se espressamente accettata dal destinatario.</p>
+            <p><strong>• Controlli:</strong> Le Amministrazioni procedono a controlli sulla veridicità delle dichiarazioni ricevute e nei casi di accertata falsità, oltre alle sanzioni penali, decadranno i benefici eventualmente conseguiti sulla base della dichiarazione non veritiera.</p>
+        </div>
+    </div>
+</body>
+</html>
